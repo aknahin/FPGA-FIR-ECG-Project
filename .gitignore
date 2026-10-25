@@ -1,0 +1,23 @@
+.DS_Store
+
+# LaTeX build files
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+*.tmp
+missfont.log
+mfput.*
+/Project-Report/access.pdf
