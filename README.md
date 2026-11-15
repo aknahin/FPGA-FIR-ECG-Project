@@ -10,6 +10,8 @@ noisy ECG (ROM) -> 360 Hz strobe -> 16-bit FIR, 63 taps -> filtered ECG -> compa
                                                                       \-> UDP packets over Ethernet -> PC
 ```
 
+<p align="center"><img src="fig/diagram_system.png" width="760" alt="System block diagram: ROM, 360 Hz strobe, FIR core, comparison, LEDs and Ethernet output."><br><em>System block diagram: ROM, 360 Hz strobe, FIR core, comparison, LEDs and Ethernet output.</em></p>
+
 The full write-up is in `Project-Report/access.pdf`. The project description is
 `Project-Report/FPGA_FIR_ECG_Project_One_Page_Updated.pdf`.
 
@@ -25,6 +27,8 @@ The full write-up is in `Project-Report/access.pdf`. The project description is
 | Resources (XC6SLX16) | 1191 LUTs, 1824 flip-flops, 1 DSP48A1, 2 block RAMs |
 | Timing at 100 MHz | worst negative slack +2.719 ns (minimum period 7.281 ns) |
 | Latency | 66 clock cycles per sample (277,778 are available per 360 Hz sample) |
+
+<p align="center"><img src="fig/fpga_capture.png" width="760" alt="Filtered ECG captured from the FPGA over Ethernet (red), compared with the clean ECG (dashed) and the noisy input (grey)."><br><em>Filtered ECG captured from the FPGA over Ethernet (red), compared with the clean ECG (dashed) and the noisy input (grey).</em></p>
 
 ## Folder layout
 
@@ -64,6 +68,14 @@ Run all cells. The notebook:
 
 Each `.mem` file has one 4-digit hex word per line. Negative numbers are two's complement.
 
+<p align="center"><img src="fig/ecg_signals.png" width="700" alt="Clean and noisy ECG (1024 samples at 360 Hz)."><br><em>Clean and noisy ECG (1024 samples at 360 Hz).</em></p>
+
+<p align="center"><img src="fig/coefficients_phase.png" width="700" alt="Filter coefficients and phase response. The coefficients are symmetric, so the phase is linear."><br><em>Filter coefficients and phase response. The coefficients are symmetric, so the phase is linear.</em></p>
+
+<p align="center"><img src="fig/frequency_response_comparison.png" width="700" alt="Magnitude response before and after rounding the coefficients to 16 bits. The curves coincide."><br><em>Magnitude response before and after rounding the coefficients to 16 bits. The curves coincide.</em></p>
+
+<p align="center"><img src="fig/filtered_ecg_signal.png" width="700" alt="Clean ECG and filtered ECG from the Python filter (31-sample delay removed)."><br><em>Clean ECG and filtered ECG from the Python filter (31-sample delay removed).</em></p>
+
 ## 2. Simulation (Icarus Verilog)
 
 Run every command from the project root. The `.mem` paths (`data/...`) are relative to it.
@@ -93,6 +105,8 @@ Waveform figures from the VCD file:
 ```sh
 python3 tools/plot_waveform.py tb_fir_mac.vcd
 ```
+
+<p align="center"><img src="fig/sim_waveform.png" width="700" alt="Simulation waveform of the FIR core for one sample: input handshake, state, tap counter and output handshake."><br><em>Simulation waveform of the FIR core for one sample: input handshake, state, tap counter and output handshake.</em></p>
 
 ## 3. Implementation (Xilinx ISE 14.6)
 
@@ -175,6 +189,10 @@ For BasicTeX, install the extra packages once: `tlmgr --usermode install spotcol
 | Architecture | Direct form, one multiplier reused over 63 clocks, three-stage pipeline, 66 clocks per sample |
 | Rounding | One arithmetic right shift by 15 of the full sum, then saturation to 16 bits |
 | Clock | 100 MHz |
+
+<p align="center"><img src="fig/diagram_pipeline.png" width="760" alt="Three-stage multiply-accumulate pipeline of the FIR core."><br><em>Three-stage multiply-accumulate pipeline of the FIR core.</em></p>
+
+<p align="center"><img src="fig/diagram_fsm.png" width="760" alt="State machine of the FIR core."><br><em>State machine of the FIR core.</em></p>
 
 ## Note on verification
 
