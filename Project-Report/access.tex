@@ -36,7 +36,7 @@
 \corresp{Corresponding author: Asrafuzzaman Khan Nahin (e-mail: g202318990@kfupm.edu.sa).}
 
 \begin{abstract}
-Electrocardiogram (ECG) recordings are often corrupted by high-frequency interference such as mains pickup and muscle noise. This paper presents the design, verification and FPGA implementation of a 16-bit fixed-point low-pass FIR filter that removes such noise from a prerecorded MIT-BIH ECG segment of 1024 samples at 360~Hz. A 63-tap Hamming-window filter with a 20~Hz cutoff is designed in Python, its coefficients are quantized to signed Q15, and a bit-exact integer model with a 40-bit accumulator, one arithmetic shift and saturation serves as the reference. The Verilog implementation reuses a single multiplier over 63 clock cycles in a three-stage pipeline and needs 66 clock cycles per sample. Samples are read from block RAM and released by a 360~Hz strobe. A self-checking testbench finds zero mismatches against the Python reference for the ECG data and seven stress vectors. On a Nexys~3 board (Spartan-6) the complete design uses \resLUT{} LUTs, \resFF{} flip-flops, \resDSP{} DSP block and \resBRAM{} block RAMs, and meets 100~MHz timing with a worst negative slack of \resWNS{}~ns. Every filtered sample is sent to a PC over Ethernet and compared with the reference. The filter raises the signal-to-noise ratio from $-0.92$~dB to $6.76$~dB and lowers the noise power by 16.3~dB; the remaining error is dominated by distortion of the QRS complex caused by the 20~Hz cutoff. The paper also reports a synthesis-dependent error that appeared only on the hardware, and how it was found and removed.
+Electrocardiogram (ECG) recordings are often corrupted by high-frequency interference such as mains pickup and muscle noise. This paper presents the design, verification and FPGA implementation of a 16-bit fixed-point low-pass FIR filter that removes such noise from a prerecorded ECG segment of 1024 samples at 360~Hz. A 63-tap Hamming-window filter with a 20~Hz cutoff is designed in Python, its coefficients are quantized to signed Q15, and a bit-exact integer model with a 40-bit accumulator, one arithmetic shift and saturation serves as the reference. The Verilog implementation reuses a single multiplier over 63 clock cycles in a three-stage pipeline and needs 66 clock cycles per sample. Samples are read from block RAM and released by a 360~Hz strobe. A self-checking testbench finds zero mismatches against the Python reference for the ECG data and seven stress vectors. On a Nexys~3 board (Spartan-6) the complete design uses \resLUT{} LUTs, \resFF{} flip-flops, \resDSP{} DSP block and \resBRAM{} block RAMs, and meets 100~MHz timing with a worst negative slack of \resWNS{}~ns. Every filtered sample is sent to a PC over Ethernet and compared with the reference. The filter raises the signal-to-noise ratio from $-0.92$~dB to $6.76$~dB and lowers the noise power by 16.3~dB; the remaining error is dominated by distortion of the QRS complex caused by the 20~Hz cutoff. The paper also reports a synthesis-dependent error that appeared only on the hardware, and how it was found and removed.
 \end{abstract}
 
 \begin{keywords}
@@ -63,7 +63,7 @@ Section~\ref{sec:data} describes the data, Section~\ref{sec:design} the filter d
 
 \section{Data and Signal Model}
 \label{sec:data}
-The input is a prerecorded segment of the MIT-BIH Arrhythmia Database \cite{b1,b2} stored in \texttt{ecg\_fir\_data\_full.csv}. It has 1024 rows with sample index, time, a clean reference in millivolts and in integer units, and a noisy integer input. The time stamps give a sampling rate of $(1024-1)/2.841667 \approx 360.00$~Hz, so $f_s = 360$~Hz is used throughout. The noisy input ranges from $-7525$ to $16384$, which fits in a signed 16-bit word. The clean integer column serves as the quality reference for all error measures.
+The input is the prerecorded ECG segment supplied with the project, stored in \texttt{ecg\_fir\_data\_full.csv}. It has 1024 rows with sample index, time, a clean reference in millivolts and in integer units, and a noisy integer input. The time stamps give a sampling rate of $(1024-1)/2.841667 \approx 360.00$~Hz, so $f_s = 360$~Hz is used throughout. The noisy input ranges from $-7525$ to $16384$, which fits in a signed 16-bit word. The clean integer column serves as the quality reference for all error measures.
 
 The difference between the noisy and the clean column has a standard deviation of 2329 units, larger than that of the clean signal (2067 units), so the input signal-to-noise ratio is below 0~dB. A spectrum of this difference shows that 94\,\% of the noise power lies between 40 and 180~Hz with strong components near 60~Hz, whereas only 3.4\,\% lies below 20~Hz. The clean ECG, in contrast, has 79\,\% of its power below 20~Hz. A low-pass filter with a 20~Hz cutoff is therefore well matched to this noise, which is what the project specifies.
 
@@ -73,7 +73,7 @@ The difference between the noisy and the clean column has a standard deviation o
 \section{Filter Design}
 \label{sec:design}
 \subsection{Specification}
-The specification is a low-pass FIR filter with a cutoff of $f_c = 20$~Hz at $f_s = 360$~Hz. The window method \cite{b3} was chosen with a Hamming window \cite{b4}. The ideal low-pass impulse response for a cutoff $\omega_c = 2\pi f_c/f_s = \pi/9$~rad is
+The specification is a low-pass FIR filter with a cutoff of $f_c = 20$~Hz at $f_s = 360$~Hz. The window method \cite{b1} was chosen with a Hamming window \cite{b2}. The ideal low-pass impulse response for a cutoff $\omega_c = 2\pi f_c/f_s = \pi/9$~rad is
 \begin{equation}
 h_d[n] = \frac{\sin\!\big(\omega_c (n-M)\big)}{\pi (n-M)}, \qquad M = \frac{N-1}{2},
 \end{equation}
@@ -84,7 +84,7 @@ w[n] = 0.54 - 0.46\cos\!\left(\frac{2\pi n}{N-1}\right), \quad 0 \le n \le N-1,
 so that $h[n] = h_d[n]\,w[n]$. For an odd length $N$ and symmetric coefficients $h[n]=h[N-1-n]$ the filter has exactly linear phase and a constant group delay of $M$ samples.
 
 \subsection{Choice of the order}
-The width of the transition band of a Hamming-windowed filter is approximately $\Delta f \approx 3.3\,f_s/N$ \cite{b3}. The project does not fix the order, so $N=63$ (order 62) was chosen as a compromise between selectivity and cost. It gives $\Delta f \approx 3.3\cdot 360/63 \approx 19$~Hz, so the passband ends near 10~Hz and the stopband starts near 30~Hz around the 20~Hz cutoff. The odd length gives an integer group delay of $M=31$ samples (86~ms), which has to be compensated when comparing with the clean signal. Table~\ref{tab:spec} summarizes the design.
+The width of the transition band of a Hamming-windowed filter is approximately $\Delta f \approx 3.3\,f_s/N$ \cite{b1}. The project does not fix the order, so $N=63$ (order 62) was chosen as a compromise between selectivity and cost. It gives $\Delta f \approx 3.3\cdot 360/63 \approx 19$~Hz, so the passband ends near 10~Hz and the stopband starts near 30~Hz around the 20~Hz cutoff. The odd length gives an integer group delay of $M=31$ samples (86~ms), which has to be compensated when comparing with the clean signal. Table~\ref{tab:spec} summarizes the design.
 
 \begin{table}[!t]
 \caption{Filter specification and measured response (floating point)}
@@ -112,7 +112,7 @@ DC gain & 0~dB (sum of coefficients $=1$) \\
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=0.98\columnwidth]{coefficients_phase.png}
 {Filter coefficients (top) and unwrapped phase response (bottom). The coefficients are symmetric, so the phase is linear.\label{fig:phase}}
 
-Figures~\ref{fig:mag} and~\ref{fig:phase} show the magnitude and phase responses. The coefficients were computed with \texttt{scipy.signal.firwin} \cite{b7}.
+Figures~\ref{fig:mag} and~\ref{fig:phase} show the magnitude and phase responses. The coefficients were computed with \texttt{scipy.signal.firwin} \cite{b5}.
 
 \section{Fixed-Point Implementation}
 \label{sec:fixed}
@@ -267,7 +267,7 @@ Filtered, captured from the FPGA & $9.26\cdot10^{5}$ & $6.76$ \\
 
 \section{FPGA Implementation}
 \label{sec:fpga}
-The target board is a Digilent Nexys~3 with a Xilinx Spartan-6 XC6SLX16 \cite{b5}. The design was synthesized, placed and routed with Xilinx ISE 14.6 using the constraints file \texttt{fir.ucf}, which fixes the 100~MHz clock, the button, switches, LEDs and the Ethernet PHY pins. ISE maps the multiplier onto one DSP48A1 slice \cite{b6} and the ROMs onto block RAM. Table~\ref{tab:res} lists the resources and the timing reported by the tools for the complete design including the Ethernet transmitter.
+The target board is a Digilent Nexys~3 with a Xilinx Spartan-6 XC6SLX16 \cite{b3}. The design was synthesized, placed and routed with Xilinx ISE 14.6 using the constraints file \texttt{fir.ucf}, which fixes the 100~MHz clock, the button, switches, LEDs and the Ethernet PHY pins. ISE maps the multiplier onto one DSP48A1 slice \cite{b4} and the ROMs onto block RAM. Table~\ref{tab:res} lists the resources and the timing reported by the tools for the complete design including the Ethernet transmitter.
 
 \begin{table}[!t]
 \caption{Implementation results on XC6SLX16 (100~MHz constraint)}
@@ -340,17 +340,12 @@ The design processes a stored ECG segment and not a live ADC signal; a live inpu
 \section{Conclusion}
 A 63-tap, 16-bit fixed-point low-pass FIR filter for ECG denoising was designed, quantized, implemented in Verilog and run on a Nexys~3 FPGA. The RTL matches a bit-exact Python model on the ECG data and seven stress vectors; the design meets 100~MHz timing with \resWNS{}~ns slack using \resLUT{} LUTs, \resFF{} flip-flops, \resDSP{} DSP block and \resBRAM{} block RAMs; and it needs 66 clock cycles per sample against 277\,778 available. The filter lowers the noise power by 16.3~dB and improves the SNR by 7.7~dB. The study also showed that matching the reference in RTL simulation is not enough: a synthesis-dependent error was found only by capturing the output of the board, and was located with a post-synthesis simulation. All sources, scripts and the build instructions are in the project archive.
 
-\section*{Acknowledgment}
-The ECG data are from the MIT-BIH Arrhythmia Database \cite{b1,b2} (PhysioNet).
-
 \begin{thebibliography}{00}
-\bibitem{b1} G. B. Moody and R. G. Mark, ``The impact of the MIT-BIH Arrhythmia Database,'' \emph{IEEE Eng. Med. Biol. Mag.}, vol. 20, no. 3, pp. 45--50, May/Jun. 2001.
-\bibitem{b2} A. L. Goldberger \emph{et al.}, ``PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals,'' \emph{Circulation}, vol. 101, no. 23, pp. e215--e220, 2000.
-\bibitem{b3} A. V. Oppenheim and R. W. Schafer, \emph{Discrete-Time Signal Processing}, 3rd ed. Upper Saddle River, NJ, USA: Pearson, 2010.
-\bibitem{b4} F. J. Harris, ``On the use of windows for harmonic analysis with the discrete Fourier transform,'' \emph{Proc. IEEE}, vol. 66, no. 1, pp. 51--83, Jan. 1978.
-\bibitem{b5} Digilent Inc., ``Nexys3 FPGA Board Reference Manual,'' Doc.\ 502-182.
-\bibitem{b6} Xilinx Inc., ``Spartan-6 FPGA DSP48A1 Slice User Guide,'' UG389.
-\bibitem{b7} P. Virtanen \emph{et al.}, ``SciPy 1.0: Fundamental algorithms for scientific computing in Python,'' \emph{Nature Methods}, vol. 17, pp. 261--272, 2020.
+\bibitem{b1} A. V. Oppenheim and R. W. Schafer, \emph{Discrete-Time Signal Processing}, 3rd ed. Upper Saddle River, NJ, USA: Pearson, 2010.
+\bibitem{b2} F. J. Harris, ``On the use of windows for harmonic analysis with the discrete Fourier transform,'' \emph{Proc. IEEE}, vol. 66, no. 1, pp. 51--83, Jan. 1978.
+\bibitem{b3} Digilent Inc., ``Nexys3 FPGA Board Reference Manual,'' Doc.\ 502-182.
+\bibitem{b4} Xilinx Inc., ``Spartan-6 FPGA DSP48A1 Slice User Guide,'' UG389.
+\bibitem{b5} P. Virtanen \emph{et al.}, ``SciPy 1.0: Fundamental algorithms for scientific computing in Python,'' \emph{Nature Methods}, vol. 17, pp. 261--272, 2020.
 \end{thebibliography}
 
 \EOD

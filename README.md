@@ -1,9 +1,7 @@
 # FPGA-Based Digital FIR Filter for Biomedical ECG Signal Denoising
 
-Author: Asrafuzzaman Khan Nahin <aknahin.engg@gmail.com>
-
 A 63-tap, 16-bit fixed-point low-pass FIR filter (20 Hz cutoff, 360 Hz sampling) that removes noise from a prerecorded
-MIT-BIH ECG signal. The filter is designed in Python and written in Verilog. It runs on a Digilent Nexys 3
+ECG signal. The filter is designed in Python and written in Verilog. It runs on a Digilent Nexys 3
 (Spartan-6 XC6SLX16). The board holds 1024 noisy ECG samples in block RAM, filters them at 360 samples per second,
 checks every output against the Python reference, and sends the filtered ECG to a PC over Ethernet.
 
@@ -36,7 +34,7 @@ The full write-up is in `Project-Report/access.pdf`. The project description is
 | `rtl/` | Verilog: `fir_mac.v` (filter), `sample_strobe.v`, `ecg_rom.v`, `fir_top.v` (top level), `eth_udp_tx.v` |
 | `tb/` | Self-checking testbenches: `tb_fir_mac.v` (filter only), `tb_fir_top.v` (whole system, including Ethernet frames) |
 | `data/` | `.mem` files for the ECG, coefficients, reference output and 7 extra test vectors; metrics; the output captured from the FPGA |
-| `dataset/` | Supplied ECG data, `ecg_fir_data_full.csv` (MIT-BIH record, 1024 samples at 360 Hz) |
+| `dataset/` | ECG data supplied with the project, `ecg_fir_data_full.csv` (1024 samples at 360 Hz) |
 | `fpga/` | `fir.ucf` (pin constraints), `build_fir.sh` (ISE build), `program.sh` (load the bitstream) |
 | `tools/` | `fir_capture.py` (receive the filtered ECG from the board), `plot_waveform.py`, `make_diagrams.py` |
 | `artifacts/fir/` | Bitstream `top.bit`, timing report, synthesis log, place-and-route report |
@@ -184,20 +182,3 @@ Passing the RTL simulation was not enough on this project. The first board build
 the synthesis tool merged the multiplier and the accumulator into one DSP block and changed how the accumulator is
 cleared. The simulation of the RTL did not show it. It was found by capturing the output of the board and located with
 a simulation of the synthesized netlist. The fix is in `rtl/fir_mac.v` and the details are in the report.
-
-## Dataset
-
-[MIT-BIH Arrhythmia Database](https://physionet.org/content/mitdb/1.0.0/) (PhysioNet).
-
-```bibtex
-@article{PhysioNet-mitdb-1.0.0,
-  author = {Moody, George and Mark, Roger},
-  title = {{MIT-BIH Arrhythmia Database}},
-  journal = {{PhysioNet}},
-  year = {2005},
-  month = feb,
-  note = {Version 1.0.0},
-  doi = {10.13026/C2F305},
-  url = {https://doi.org/10.13026/C2F305}
-}
-```
