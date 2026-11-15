@@ -1,0 +1,21 @@
+{
+  "definitions": {
+    "delay_samples": "(NUM_TAPS-1)/2; output[n] aligns with clean[n-delay]",
+    "mse_noisy": "mean((noisy[n] - clean[n])^2) over n in [0, N-delay)",
+    "mse_filtered": "mean((fixed_output[n+delay] - clean[n])^2) over n in [0, N-delay)",
+    "snr_db": "10*log10(sum(clean^2) / sum((clean - estimate)^2)), same alignment",
+    "quant_err_max_abs": "max|fixed_output - float_filter_output| in LSBs (float uses unquantized h)",
+    "quant_err_rms": "RMS of fixed_output - float_filter_output in LSBs",
+    "model_vs_rtl_mismatches": "count of samples where RTL output != expected.mem; target 0"
+  },
+  "delay_samples": 31,
+  "mse_noisy": 5421747.336898919,
+  "mse_filtered": 926239.0474799868,
+  "snr_noisy_db": -0.9189536040262875,
+  "snr_filtered_db": 6.755208288096761,
+  "quant_err_max_abs": 1.442358815352918,
+  "quant_err_rms": 0.6082650448458761,
+  "acc_bound_data": 731267072,
+  "acc_bound_design": 1462534144,
+  "acc_peak_actual": 334915787
+}

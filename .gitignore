@@ -20,4 +20,12 @@
 *.tmp
 missfont.log
 mfput.*
-/Project-Report/access.pdf
+
+# Python
+.venv/
+
+# Simulation and build products
+sim_*
+*.vcd
+__pycache__/
+*.pyc

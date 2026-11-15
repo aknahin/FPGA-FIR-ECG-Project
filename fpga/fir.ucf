@@ -1,0 +1,39 @@
+# Constraints for fir_top on the Digilent Nexys 3 (XC6SLX16-3-CSG324).
+# Pin numbers are from the Digilent Nexys3_Master.ucf and match the other Nexys 3 design that was verified on this board.
+
+# 100 MHz system clock
+NET "clk" LOC = "V10" | IOSTANDARD = LVCMOS33;
+NET "clk" TNM_NET = "sys_clk";
+TIMESPEC "TS_sys_clk" = PERIOD "sys_clk" 10 ns HIGH 50%;
+
+# Button and switches
+NET "btn_up" LOC = "A8"  | IOSTANDARD = LVCMOS33;   # BTNU: reset / restart
+NET "fast"   LOC = "T10" | IOSTANDARD = LVCMOS33;   # SW0: 1 = fast self-test instead of 360 Hz
+NET "once"   LOC = "T9"  | IOSTANDARD = LVCMOS33;   # SW1: 1 = stop after one run instead of repeating
+
+# LEDs
+NET "led[0]" LOC = "U16" | IOSTANDARD = LVCMOS33;   # running
+NET "led[1]" LOC = "V16" | IOSTANDARD = LVCMOS33;   # done
+NET "led[2]" LOC = "U15" | IOSTANDARD = LVCMOS33;   # PASS
+NET "led[3]" LOC = "V15" | IOSTANDARD = LVCMOS33;   # FAIL
+NET "led[4]" LOC = "M11" | IOSTANDARD = LVCMOS33;   # mismatch count, bit 0
+NET "led[5]" LOC = "N11" | IOSTANDARD = LVCMOS33;
+NET "led[6]" LOC = "R11" | IOSTANDARD = LVCMOS33;
+NET "led[7]" LOC = "T11" | IOSTANDARD = LVCMOS33;   # mismatch count, bit 3
+
+# Ethernet PHY (SMSC LAN8710A, MII), transmit side only
+NET "phy_tx_clk" LOC = "L5" | IOSTANDARD = LVCMOS33;
+NET "phy_tx_clk" TNM_NET = "phy_tx_clk";
+TIMESPEC "TS_phy_tx_clk" = PERIOD "phy_tx_clk" 40 ns HIGH 50%;
+NET "phy_txd[0]" LOC = "U2" | IOSTANDARD = LVCMOS33 | IOB = TRUE;
+NET "phy_txd[1]" LOC = "U1" | IOSTANDARD = LVCMOS33 | IOB = TRUE;
+NET "phy_txd[2]" LOC = "T2" | IOSTANDARD = LVCMOS33 | IOB = TRUE;
+NET "phy_txd[3]" LOC = "T1" | IOSTANDARD = LVCMOS33 | IOB = TRUE;
+NET "phy_tx_en"  LOC = "L2" | IOSTANDARD = LVCMOS33 | IOB = TRUE;
+NET "phy_tx_er"  LOC = "P2" | IOSTANDARD = LVCMOS33;
+NET "phy_rstn"   LOC = "P3" | IOSTANDARD = LVCMOS33;
+NET "phy_mdc"    LOC = "M5" | IOSTANDARD = LVCMOS33;
+
+# The sample data crosses between the 100 MHz clock and the PHY clock through a toggle handshake in eth_udp_tx.
+TIMESPEC "TS_clk_to_phy" = FROM "sys_clk" TO "phy_tx_clk" TIG;
+TIMESPEC "TS_phy_to_clk" = FROM "phy_tx_clk" TO "sys_clk" TIG;

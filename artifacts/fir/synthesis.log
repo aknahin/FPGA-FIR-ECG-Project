@@ -1,0 +1,880 @@
+Release 14.6 - xst P.68d (lin64)
+Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
+--> 
+
+TABLE OF CONTENTS
+  1) Synthesis Options Summary
+  2) HDL Parsing
+  3) HDL Elaboration
+  4) HDL Synthesis
+       4.1) HDL Synthesis Report
+  5) Advanced HDL Synthesis
+       5.1) Advanced HDL Synthesis Report
+  6) Low Level Synthesis
+  7) Partition Report
+  8) Design Summary
+       8.1) Primitive and Black Box Usage
+       8.2) Device utilization summary
+       8.3) Partition Resource Summary
+       8.4) Timing Report
+            8.4.1) Clock Information
+            8.4.2) Asynchronous Control Signals Information
+            8.4.3) Timing Summary
+            8.4.4) Timing Details
+            8.4.5) Cross Clock Domains Report
+
+
+=========================================================================
+*                      Synthesis Options Summary                        *
+=========================================================================
+---- Source Parameters
+Input File Name                    : "top.prj"
+Input Format                       : mixed
+
+---- Target Parameters
+Output File Name                   : "top.ngc"
+Output Format                      : NGC
+Target Device                      : xc6slx16-3-csg324
+
+---- Source Options
+Top Module Name                    : fir_top
+
+---- General Options
+Optimization Goal                  : Speed
+Optimization Effort                : 1
+
+=========================================================================
+
+
+=========================================================================
+*                          HDL Parsing                                  *
+=========================================================================
+Analyzing Verilog file "/home/aknahin/fir-build/rtl/fir_mac.v" into library work
+Parsing module <fir_mac>.
+Analyzing Verilog file "/home/aknahin/fir-build/rtl/sample_strobe.v" into library work
+Parsing module <sample_strobe>.
+Analyzing Verilog file "/home/aknahin/fir-build/rtl/ecg_rom.v" into library work
+Parsing module <ecg_rom>.
+Analyzing Verilog file "/home/aknahin/fir-build/rtl/eth_udp_tx.v" into library work
+Parsing module <eth_udp_tx>.
+Analyzing Verilog file "/home/aknahin/fir-build/rtl/fir_top.v" into library work
+Parsing module <fir_top>.
+
+=========================================================================
+*                            HDL Elaboration                            *
+=========================================================================
+
+Elaborating module <fir_top>.
+
+Elaborating module <sample_strobe>.
+
+Elaborating module <ecg_rom(FILE="data/ecg.mem")>.
+Reading initialization file \"data/ecg.mem\".
+
+Elaborating module <ecg_rom(FILE="data/expected.mem")>.
+Reading initialization file \"data/expected.mem\".
+
+Elaborating module <fir_mac(COEFF_FILE="data/coeff.mem")>.
+Reading initialization file \"data/coeff.mem\".
+WARNING:HDLCompiler:413 - "/home/aknahin/fir-build/rtl/fir_mac.v" Line 78: Result of 8-bit expression is truncated to fit in 7-bit target.
+WARNING:HDLCompiler:413 - "/home/aknahin/fir-build/rtl/fir_mac.v" Line 87: Result of 25-bit expression is truncated to fit in 16-bit target.
+
+Elaborating module <eth_udp_tx(PAYLOAD_BYTES=20)>.
+WARNING:HDLCompiler:1127 - "/home/aknahin/fir-build/rtl/fir_top.v" Line 170: Assignment to eth_ready ignored, since the identifier is never used
+WARNING:HDLCompiler:1127 - "/home/aknahin/fir-build/rtl/fir_top.v" Line 172: Assignment to eth_sent_toggle ignored, since the identifier is never used
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Synthesizing Unit <fir_top>.
+    Related source file is "/home/aknahin/fir-build/rtl/fir_top.v".
+        STROBE_PERIOD = 277778
+        FAST_PERIOD = 200
+        HOLD_CLOCKS = 67108864
+        PHY_RESET_CLOCKS = 1000000
+        ECG_FILE = "data/ecg.mem"
+        EXP_FILE = "data/expected.mem"
+        COEFF_FILE = "data/coeff.mem"
+        NUM_SAMPLES = 1024
+INFO:Xst:3210 - "/home/aknahin/fir-build/rtl/fir_top.v" line 169: Output port <ready> of the instance <u_eth> is unconnected or connected to loadless signal.
+INFO:Xst:3210 - "/home/aknahin/fir-build/rtl/fir_top.v" line 169: Output port <sent_toggle> of the instance <u_eth> is unconnected or connected to loadless signal.
+    Found 1-bit register for signal <rst_s2>.
+    Found 1-bit register for signal <in_valid>.
+    Found 1-bit register for signal <pkt_send>.
+    Found 1-bit register for signal <restart>.
+    Found 10-bit register for signal <idx>.
+    Found 1-bit register for signal <waiting>.
+    Found 1-bit register for signal <done>.
+    Found 1-bit register for signal <overrun>.
+    Found 8-bit register for signal <errors>.
+    Found 27-bit register for signal <hold_cnt>.
+    Found 16-bit register for signal <x>.
+    Found 16-bit register for signal <pkt_idx>.
+    Found 16-bit register for signal <pkt_y>.
+    Found 16-bit register for signal <pkt_exp>.
+    Found 16-bit register for signal <pkt_x>.
+    Found 2-bit register for signal <pkt_flags>.
+    Found 1-bit register for signal <phy_rstn>.
+    Found 20-bit register for signal <phy_timer>.
+    Found 1-bit register for signal <rst_s1>.
+    Found 27-bit adder for signal <hold_cnt[26]_GND_1_o_add_4_OUT> created at line 115.
+    Found 8-bit adder for signal <errors[7]_GND_1_o_add_15_OUT> created at line 130.
+    Found 10-bit adder for signal <idx[9]_GND_1_o_add_20_OUT> created at line 139.
+    Found 20-bit adder for signal <phy_timer[19]_GND_1_o_add_70_OUT> created at line 159.
+    Found 27-bit comparator greater for signal <n0006> created at line 107
+    Found 16-bit comparator equal for signal <n0029> created at line 130
+    Found 8-bit comparator greater for signal <GND_1_o_errors[7]_LessThan_67_o> created at line 151
+    Summary:
+	inferred   4 Adder/Subtractor(s).
+	inferred 156 D-type flip-flop(s).
+	inferred   3 Comparator(s).
+	inferred  10 Multiplexer(s).
+Unit <fir_top> synthesized.
+
+Synthesizing Unit <sample_strobe>.
+    Related source file is "/home/aknahin/fir-build/rtl/sample_strobe.v".
+    Found 20-bit register for signal <cnt>.
+    Found 1-bit register for signal <strobe>.
+    Found 20-bit subtractor for signal <period[19]_GND_2_o_sub_2_OUT> created at line 19.
+    Found 20-bit adder for signal <cnt[19]_GND_2_o_add_3_OUT> created at line 23.
+    Found 20-bit comparator greater for signal <n0001> created at line 19
+    Summary:
+	inferred   2 Adder/Subtractor(s).
+	inferred  21 D-type flip-flop(s).
+	inferred   1 Comparator(s).
+Unit <sample_strobe> synthesized.
+
+Synthesizing Unit <ecg_rom_1>.
+    Related source file is "/home/aknahin/fir-build/rtl/ecg_rom.v".
+        FILE = "data/ecg.mem"
+        DEPTH = 1024
+        AW = 10
+WARNING:Xst:2999 - Signal 'mem', unconnected in block 'ecg_rom_1', is tied to its initial value.
+    Found 1024x16-bit single-port Read Only RAM <Mram_mem> for signal <mem>.
+    Found 16-bit register for signal <q>.
+    Summary:
+	inferred   1 RAM(s).
+	inferred  16 D-type flip-flop(s).
+Unit <ecg_rom_1> synthesized.
+
+Synthesizing Unit <ecg_rom_2>.
+    Related source file is "/home/aknahin/fir-build/rtl/ecg_rom.v".
+        FILE = "data/expected.mem"
+        DEPTH = 1024
+        AW = 10
+WARNING:Xst:2999 - Signal 'mem', unconnected in block 'ecg_rom_2', is tied to its initial value.
+    Found 1024x16-bit single-port Read Only RAM <Mram_mem> for signal <mem>.
+    Found 16-bit register for signal <q>.
+    Summary:
+	inferred   1 RAM(s).
+	inferred  16 D-type flip-flop(s).
+Unit <ecg_rom_2> synthesized.
+
+Synthesizing Unit <fir_mac>.
+    Related source file is "/home/aknahin/fir-build/rtl/fir_mac.v".
+        NUM_TAPS = 63
+        DATA_W = 16
+        ACC_W = 40
+        FRAC = 15
+        COEFF_FILE = "data/coeff.mem"
+WARNING:Xst:2999 - Signal 'coeffs', unconnected in block 'fir_mac', is tied to its initial value.
+WARNING:Xst:3035 - Index value(s) does not match array range for signal <coeffs>, simulation mismatch.
+    Found 63x16-bit single-port Read Only RAM <Mram_coeffs> for signal <coeffs>.
+    Found 2-bit register for signal <state>.
+    Found 40-bit register for signal <acc>.
+    Found 7-bit register for signal <tap_count>.
+    Found 16-bit register for signal <y>.
+    Found 1-bit register for signal <v1>.
+    Found 32-bit register for signal <p_r>.
+    Found 1008-bit register for signal <n0053[1007:0]>.
+    Found 16-bit register for signal <h_r>.
+    Found 16-bit register for signal <c_r>.
+    Found 1-bit register for signal <out_valid>.
+    Found finite state machine <FSM_0> for signal <state>.
+    -----------------------------------------------------------------------
+    | States             | 4                                              |
+    | Transitions        | 7                                              |
+    | Inputs             | 3                                              |
+    | Outputs            | 5                                              |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | rst (positive)                                 |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 00                                             |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found 40-bit adder for signal <acc[39]_p_r[31]_add_7_OUT> created at line 65.
+    Found 7-bit adder for signal <tap_count[6]_GND_5_o_add_13_OUT> created at line 78.
+    Found 16x16-bit multiplier for signal <h_r[15]_c_r[15]_MuLt_5_OUT> created at line 64.
+    Found 16-bit 63-to-1 multiplexer for signal <tap_count[5]_X_5_o_wide_mux_3_OUT> created at line 62.
+    Found 40-bit comparator greater for signal <acc[39]_GND_5_o_LessThan_18_o> created at line 85
+    Found 40-bit comparator greater for signal <PWR_6_o_acc[39]_LessThan_19_o> created at line 86
+    Summary:
+	inferred   1 RAM(s).
+	inferred   1 Multiplier(s).
+	inferred   2 Adder/Subtractor(s).
+	inferred 1137 D-type flip-flop(s).
+	inferred   2 Comparator(s).
+	inferred   7 Multiplexer(s).
+	inferred   1 Finite State Machine(s).
+Unit <fir_mac> synthesized.
+
+Synthesizing Unit <eth_udp_tx>.
+    Related source file is "/home/aknahin/fir-build/rtl/eth_udp_tx.v".
+        SRC_MAC = 48'b000000100000000000000000000000000000000000000001
+        SRC_IP = 32'b11000000101010000000101000000010
+        DST_IP = 32'b11111111111111111111111111111111
+        UDP_PORT = 16'b0001001110001101
+        PAYLOAD_BYTES = 20
+    Found 160-bit register for signal <held>.
+    Found 1-bit register for signal <req>.
+    Found 2-bit register for signal <req_sync>.
+    Found 1-bit register for signal <mii_tx_en>.
+    Found 4-bit register for signal <mii_txd>.
+    Found 3-bit register for signal <state>.
+    Found 8-bit register for signal <count>.
+    Found 32-bit register for signal <crc>.
+    Found 1-bit register for signal <sent_toggle>.
+    Found 496-bit register for signal <shift>.
+    Found 1-bit register for signal <ack>.
+    Found 2-bit register for signal <ack_sync>.
+    Found finite state machine <FSM_1> for signal <state>.
+    -----------------------------------------------------------------------
+    | States             | 5                                              |
+    | Transitions        | 10                                             |
+    | Inputs             | 5                                              |
+    | Outputs            | 4                                              |
+    | Clock              | mii_tx_clk (rising_edge)                       |
+    | Power Up State     | 000                                            |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found 8-bit adder for signal <count[7]_GND_7_o_add_81_OUT> created at line 96.
+    Found 1-bit comparator equal for signal <ready> created at line 26
+    Found 1-bit comparator equal for signal <n0055> created at line 71
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred 708 D-type flip-flop(s).
+	inferred   2 Comparator(s).
+	inferred  17 Multiplexer(s).
+	inferred   1 Finite State Machine(s).
+Unit <eth_udp_tx> synthesized.
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 1024x16-bit single-port Read Only RAM                 : 2
+ 63x16-bit single-port Read Only RAM                   : 1
+# Multipliers                                          : 1
+ 16x16-bit multiplier                                  : 1
+# Adders/Subtractors                                   : 9
+ 10-bit adder                                          : 1
+ 20-bit adder                                          : 2
+ 20-bit subtractor                                     : 1
+ 27-bit adder                                          : 1
+ 40-bit adder                                          : 1
+ 7-bit adder                                           : 1
+ 8-bit adder                                           : 2
+# Registers                                            : 43
+ 1-bit register                                        : 16
+ 10-bit register                                       : 1
+ 1008-bit register                                     : 1
+ 16-bit register                                       : 10
+ 160-bit register                                      : 1
+ 2-bit register                                        : 3
+ 20-bit register                                       : 2
+ 27-bit register                                       : 1
+ 32-bit register                                       : 2
+ 4-bit register                                        : 1
+ 40-bit register                                       : 1
+ 496-bit register                                      : 1
+ 7-bit register                                        : 1
+ 8-bit register                                        : 2
+# Comparators                                          : 8
+ 1-bit comparator equal                                : 2
+ 16-bit comparator equal                               : 1
+ 20-bit comparator greater                             : 1
+ 27-bit comparator greater                             : 1
+ 40-bit comparator greater                             : 2
+ 8-bit comparator greater                              : 1
+# Multiplexers                                         : 34
+ 1-bit 2-to-1 multiplexer                              : 7
+ 10-bit 2-to-1 multiplexer                             : 1
+ 16-bit 2-to-1 multiplexer                             : 2
+ 16-bit 63-to-1 multiplexer                            : 1
+ 32-bit 2-to-1 multiplexer                             : 7
+ 4-bit 2-to-1 multiplexer                              : 5
+ 40-bit 2-to-1 multiplexer                             : 2
+ 7-bit 2-to-1 multiplexer                              : 1
+ 8-bit 2-to-1 multiplexer                              : 8
+# FSMs                                                 : 2
+# Xors                                                 : 8
+ 1-bit xor2                                            : 4
+ 32-bit xor2                                           : 4
+
+=========================================================================
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+
+Synthesizing (advanced) Unit <ecg_rom_2>.
+INFO:Xst:3226 - The RAM <Mram_mem> will be implemented as a BLOCK RAM, absorbing the following register(s): <q>
+    -----------------------------------------------------------------------
+    | ram_type           | Block                               |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 1024-word x 16-bit                  |          |
+    |     mode           | write-first                         |          |
+    |     clkA           | connected to signal <clk>           | rise     |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <addr>          |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to signal <q>             |          |
+    -----------------------------------------------------------------------
+    | optimization       | speed                               |          |
+    -----------------------------------------------------------------------
+Unit <ecg_rom_2> synthesized (advanced).
+
+Synthesizing (advanced) Unit <fir_mac>.
+The following registers are absorbed into counter <tap_count>: 1 register on signal <tap_count>.
+INFO:Xst:3231 - The small RAM <Mram_coeffs> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
+    -----------------------------------------------------------------------
+    | ram_type           | Distributed                         |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 63-word x 16-bit                    |          |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <tap_count<5:0>> |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to internal node          |          |
+    -----------------------------------------------------------------------
+Unit <fir_mac> synthesized (advanced).
+
+Synthesizing (advanced) Unit <fir_top>.
+The following registers are absorbed into counter <phy_timer>: 1 register on signal <phy_timer>.
+The following registers are absorbed into counter <idx>: 1 register on signal <idx>.
+The following registers are absorbed into counter <errors>: 1 register on signal <errors>.
+The following registers are absorbed into counter <hold_cnt>: 1 register on signal <hold_cnt>.
+INFO:Xst:3226 - The RAM <u_ecg/Mram_mem> will be implemented as a BLOCK RAM, absorbing the following register(s): <u_ecg/q> <x>
+    -----------------------------------------------------------------------
+    | ram_type           | Block                               |          |
+    -----------------------------------------------------------------------
+    | Port A                                                              |
+    |     aspect ratio   | 1024-word x 16-bit                  |          |
+    |     mode           | write-first                         |          |
+    |     clkA           | connected to signal <clk>           | rise     |
+    |     weA            | connected to signal <GND>           | high     |
+    |     addrA          | connected to signal <idx>           |          |
+    |     diA            | connected to signal <GND>           |          |
+    |     doA            | connected to signal <x>             |          |
+    -----------------------------------------------------------------------
+    | optimization       | speed                               |          |
+    -----------------------------------------------------------------------
+Unit <fir_top> synthesized (advanced).
+
+Synthesizing (advanced) Unit <sample_strobe>.
+The following registers are absorbed into counter <cnt>: 1 register on signal <cnt>.
+Unit <sample_strobe> synthesized (advanced).
+
+Synthesizing (advanced) Unit <fir_mac>.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<0>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<1>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<2>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<3>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<4>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<5>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<6>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<7>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<8>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<9>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<10>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<11>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<12>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<13>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<14>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+INFO:Xst:1317 - HDL ADVISOR - A dynamic shift register was found for signal <tap_count[5]_X_5_o_wide_mux_3_OUT<15>> and currently occupies 63 logic cells (32 slices) for the flip-flop chain and additional logic cells for the multiplexer. Removing the set/reset logic would take advantage of SRL32 (and derived) primitives and reduce this to 2 logic cells (1 slices). Evaluate if the set/reset can be removed for this simple shift register. The majority of simple pipeline structures do not need to be set/reset operationally.
+Unit <fir_mac> synthesized (advanced).
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# RAMs                                                 : 3
+ 1024x16-bit single-port block Read Only RAM           : 2
+ 63x16-bit single-port distributed Read Only RAM       : 1
+# Multipliers                                          : 1
+ 16x16-bit multiplier                                  : 1
+# Adders/Subtractors                                   : 3
+ 20-bit subtractor                                     : 1
+ 40-bit adder                                          : 1
+ 8-bit adder                                           : 1
+# Counters                                             : 6
+ 10-bit up counter                                     : 1
+ 20-bit up counter                                     : 2
+ 27-bit up counter                                     : 1
+ 7-bit up counter                                      : 1
+ 8-bit up counter                                      : 1
+# Registers                                            : 1914
+ Flip-Flops                                            : 1914
+# Comparators                                          : 8
+ 1-bit comparator equal                                : 2
+ 16-bit comparator equal                               : 1
+ 20-bit comparator greater                             : 1
+ 27-bit comparator greater                             : 1
+ 40-bit comparator greater                             : 2
+ 8-bit comparator greater                              : 1
+# Multiplexers                                         : 49
+ 1-bit 2-to-1 multiplexer                              : 11
+ 1-bit 63-to-1 multiplexer                             : 16
+ 16-bit 2-to-1 multiplexer                             : 2
+ 32-bit 2-to-1 multiplexer                             : 7
+ 4-bit 2-to-1 multiplexer                              : 4
+ 40-bit 2-to-1 multiplexer                             : 2
+ 8-bit 2-to-1 multiplexer                              : 7
+# FSMs                                                 : 2
+# Xors                                                 : 8
+ 1-bit xor2                                            : 4
+ 32-bit xor2                                           : 4
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+WARNING:Xst:1293 - FF/Latch <pkt_idx_10> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <pkt_idx_11> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <pkt_idx_12> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <pkt_idx_13> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <pkt_idx_14> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <pkt_idx_15> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+INFO:Xst:2261 - The FF/Latch <held_2> in Unit <eth_udp_tx> is equivalent to the following 4 FFs/Latches, which will be removed : <held_3> <held_5> <held_6> <held_7> 
+INFO:Xst:2261 - The FF/Latch <held_0> in Unit <eth_udp_tx> is equivalent to the following 94 FFs/Latches, which will be removed : <held_1> <held_4> <held_10> <held_11> <held_12> <held_13> <held_14> <held_15> <held_26> <held_27> <held_28> <held_29> <held_30> <held_31> <held_80> <held_81> <held_82> <held_83> <held_84> <held_85> <held_86> <held_87> <held_88> <held_89> <held_90> <held_91> <held_92> <held_93> <held_94> <held_95> <held_96> <held_97> <held_98> <held_99> <held_100> <held_101> <held_102> <held_103> <held_104> <held_105> <held_106> <held_107> <held_108> <held_109> <held_110> <held_111> <held_112> <held_113> <held_114> <held_115> <held_116> <held_117> <held_118> <held_119> <held_120> <held_121> <held_122> <held_123> <held_124> <held_125> <held_126> <held_127> <held_128> <held_129> <held_130> <held_131> <held_132> <held_133> <held_134> <held_135> <held_136> <held_137> <held_138> <held_139> <held_140> <held_141> <held_142> <held_143> <held_144> <held_145> <held_146> <held_147> <held_148> <held_149>
+   <held_150> <held_151> <held_152> <held_153> <held_154> <held_155> <held_156> <held_157> <held_158> <held_159> 
+WARNING:Xst:1426 - The value init of the FF/Latch held_2 hinder the constant cleaning in the block eth_udp_tx.
+   You should achieve better results by setting this init to 1.
+WARNING:Xst:1293 - FF/Latch <shift_475> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_474> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_473> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_472> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_471> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_470> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_469> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_468> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_467> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_466> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_465> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_464> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_463> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_462> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_461> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_460> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_459> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_458> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_457> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_456> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_495> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_494> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_493> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_492> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_491> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_490> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_489> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_488> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_487> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_486> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_485> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_484> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_483> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_482> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_481> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_480> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_479> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_478> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_477> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_476> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_434> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_433> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_432> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_431> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_430> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_429> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_428> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_427> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_426> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_425> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_424> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_423> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_422> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_421> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_420> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_419> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_418> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_417> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_416> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <held_0> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_455> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_454> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_453> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_452> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_451> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_450> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_449> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_448> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_447> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_446> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_445> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_444> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_443> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_442> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_441> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_440> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_439> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_438> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_437> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_436> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <shift_435> has a constant value of 0 in block <eth_udp_tx>. This FF/Latch will be trimmed during the optimization process.
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <u_fir/FSM_0> on signal <state[1:2]> with user encoding.
+-------------------
+ State | Encoding
+-------------------
+ 00    | 00
+ 01    | 01
+ 11    | 11
+ 10    | 10
+-------------------
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <u_eth/FSM_1> on signal <state[1:3]> with user encoding.
+-------------------
+ State | Encoding
+-------------------
+ 000   | 000
+ 001   | 001
+ 010   | 010
+ 011   | 011
+ 100   | 100
+-------------------
+
+Optimizing unit <fir_top> ...
+
+Optimizing unit <fir_mac> ...
+
+Optimizing unit <eth_udp_tx> ...
+WARNING:Xst:2677 - Node <u_eth/sent_toggle> of sequential type is unconnected in block <fir_top>.
+WARNING:Xst:1293 - FF/Latch <hold_cnt_26> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <u_strobe/cnt_19> has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <u_fir/tap_count_6> (without init value) has a constant value of 0 in block <fir_top>. This FF/Latch will be trimmed during the optimization process.
+
+Mapping all equations...
+Building and optimizing final netlist ...
+Found area constraint ratio of 100 (+ 0) on block fir_top, actual ratio is 30.
+FlipFlop in_valid has been replicated 1 time(s)
+FlipFlop u_eth/state_FSM_FFd2 has been replicated 1 time(s)
+FlipFlop u_fir/state_FSM_FFd1 has been replicated 1 time(s)
+FlipFlop u_fir/state_FSM_FFd2 has been replicated 1 time(s)
+FlipFlop u_fir/tap_count_0 has been replicated 15 time(s)
+FlipFlop u_fir/tap_count_1 has been replicated 14 time(s)
+FlipFlop u_fir/tap_count_2 has been replicated 3 time(s)
+FlipFlop u_fir/tap_count_3 has been replicated 1 time(s)
+
+Final Macro Processing ...
+
+Processing Unit <fir_top> :
+	Found 2-bit shift register for signal <rst_s2>.
+	Found 2-bit shift register for signal <u_eth/ack_sync_1>.
+	Found 2-bit shift register for signal <u_eth/req_sync_1>.
+Unit <fir_top> processed.
+
+=========================================================================
+Final Register Report
+
+Macro Statistics
+# Registers                                            : 1821
+ Flip-Flops                                            : 1821
+# Shift Registers                                      : 3
+ 2-bit shift register                                  : 3
+
+=========================================================================
+
+=========================================================================
+*                           Partition Report                            *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Design Summary                             *
+=========================================================================
+
+Top Level Output File Name         : top.ngc
+
+Primitive and Black Box Usage:
+------------------------------
+# BELS                             : 1453
+#      GND                         : 1
+#      INV                         : 9
+#      LUT1                        : 81
+#      LUT2                        : 90
+#      LUT3                        : 27
+#      LUT4                        : 424
+#      LUT5                        : 136
+#      LUT6                        : 423
+#      MUXCY                       : 138
+#      VCC                         : 1
+#      XORCY                       : 123
+# FlipFlops/Latches                : 1824
+#      FD                          : 36
+#      FDE                         : 605
+#      FDR                         : 110
+#      FDRE                        : 1073
+# RAMS                             : 2
+#      RAMB16BWER                  : 2
+# Shift Registers                  : 3
+#      SRLC16E                     : 3
+# Clock Buffers                    : 2
+#      BUFGP                       : 2
+# IO Buffers                       : 19
+#      IBUF                        : 3
+#      OBUF                        : 16
+# DSPs                             : 1
+#      DSP48A1                     : 1
+
+Device utilization summary:
+---------------------------
+
+Selected Device : 6slx16csg324-3 
+
+
+Slice Logic Utilization: 
+ Number of Slice Registers:            1824  out of  18224    10%  
+ Number of Slice LUTs:                 1193  out of   9112    13%  
+    Number used as Logic:              1190  out of   9112    13%  
+    Number used as Memory:                3  out of   2176     0%  
+       Number used as SRL:                3
+
+Slice Logic Distribution: 
+ Number of LUT Flip Flop pairs used:   2319
+   Number with an unused Flip Flop:     495  out of   2319    21%  
+   Number with an unused LUT:          1126  out of   2319    48%  
+   Number of fully used LUT-FF pairs:   698  out of   2319    30%  
+   Number of unique control sets:        20
+
+IO Utilization: 
+ Number of IOs:                          21
+ Number of bonded IOBs:                  21  out of    232     9%  
+
+Specific Feature Utilization:
+ Number of Block RAM/FIFO:                2  out of     32     6%  
+    Number using Block RAM only:          2
+ Number of BUFG/BUFGCTRLs:                2  out of     16    12%  
+ Number of DSP48A1s:                      1  out of     32     3%  
+
+---------------------------
+Partition Resource Summary:
+---------------------------
+
+  No Partitions were found in this design.
+
+---------------------------
+
+
+=========================================================================
+Timing Report
+
+NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
+      FOR ACCURATE TIMING INFORMATION PLEASE REFER TO THE TRACE REPORT
+      GENERATED AFTER PLACE-and-ROUTE.
+
+Clock Information:
+------------------
+-----------------------------------+------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)  | Load  |
+-----------------------------------+------------------------+-------+
+clk                                | BUFGP                  | 1362  |
+phy_tx_clk                         | BUFGP                  | 468   |
+-----------------------------------+------------------------+-------+
+
+Asynchronous Control Signals Information:
+----------------------------------------
+No asynchronous control signals found in this design
+
+Timing Summary:
+---------------
+Speed Grade: -3
+
+   Minimum period: 5.054ns (Maximum Frequency: 197.867MHz)
+   Minimum input arrival time before clock: 6.299ns
+   Maximum output required time after clock: 6.323ns
+   Maximum combinational path delay: No path found
+
+Timing Details:
+---------------
+All values displayed in nanoseconds (ns)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'clk'
+  Clock period: 5.054ns (frequency: 197.867MHz)
+  Total number of paths / destination ports: 16267 / 3813
+-------------------------------------------------------------------------
+Delay:               5.054ns (Levels of Logic = 8)
+  Source:            hold_cnt_0 (FF)
+  Destination:       idx_1 (FF)
+  Source Clock:      clk rising
+  Destination Clock: clk rising
+
+  Data Path: hold_cnt_0 to idx_1
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FD:C->Q               3   0.447   0.995  hold_cnt_0 (hold_cnt_0)
+     LUT5:I0->O            1   0.203   0.000  Mcompar_n0006_lut<0> (Mcompar_n0006_lut<0>)
+     MUXCY:S->O            1   0.172   0.000  Mcompar_n0006_cy<0> (Mcompar_n0006_cy<0>)
+     MUXCY:CI->O           1   0.019   0.000  Mcompar_n0006_cy<1> (Mcompar_n0006_cy<1>)
+     MUXCY:CI->O           1   0.019   0.000  Mcompar_n0006_cy<2> (Mcompar_n0006_cy<2>)
+     MUXCY:CI->O           1   0.019   0.000  Mcompar_n0006_cy<3> (Mcompar_n0006_cy<3>)
+     MUXCY:CI->O           1   0.019   0.000  Mcompar_n0006_cy<4> (Mcompar_n0006_cy<4>)
+     MUXCY:CI->O          30   0.213   1.264  Mcompar_n0006_cy<5> (Mcompar_n0006_cy<5>)
+     LUT4:I3->O           18   0.205   1.049  Mcount_errors_val1 (Mcount_errors_val)
+     FDRE:R                    0.430          idx_9
+    ----------------------------------------
+    Total                      5.054ns (1.746ns logic, 3.308ns route)
+                                       (34.5% logic, 65.5% route)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'phy_tx_clk'
+  Clock period: 4.612ns (frequency: 216.827MHz)
+  Total number of paths / destination ports: 3990 / 927
+-------------------------------------------------------------------------
+Delay:               4.612ns (Levels of Logic = 3)
+  Source:            u_eth/state_FSM_FFd2 (FF)
+  Destination:       u_eth/count_7 (FF)
+  Source Clock:      phy_tx_clk rising
+  Destination Clock: phy_tx_clk rising
+
+  Data Path: u_eth/state_FSM_FFd2 to u_eth/count_7
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FD:C->Q             465   0.447   2.086  u_eth/state_FSM_FFd2 (u_eth/state_FSM_FFd2)
+     LUT4:I3->O            2   0.205   0.617  u_eth/state_FSM_FFd3-In11 (u_eth/state_FSM_FFd3-In1)
+     LUT5:I4->O            6   0.205   0.745  u_eth/Mmux_state[2]_count[7]_wide_mux_87_OUT311 (u_eth/Mmux_state[2]_count[7]_wide_mux_87_OUT31)
+     LUT6:I5->O            1   0.205   0.000  u_eth/Mmux_state[2]_count[7]_wide_mux_87_OUT51 (u_eth/state[2]_count[7]_wide_mux_87_OUT<4>)
+     FDE:D                     0.102          u_eth/count_4
+    ----------------------------------------
+    Total                      4.612ns (1.164ns logic, 3.448ns route)
+                                       (25.2% logic, 74.8% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'clk'
+  Total number of paths / destination ports: 368 / 68
+-------------------------------------------------------------------------
+Offset:              6.299ns (Levels of Logic = 8)
+  Source:            fast (PAD)
+  Destination:       u_strobe/cnt_1 (FF)
+  Destination Clock: clk rising
+
+  Data Path: fast to u_strobe/cnt_1
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O             7   1.222   0.773  fast_IBUF (fast_IBUF)
+     INV:I->O             10   0.206   1.104  u_strobe/period[19]_GND_2_o_sub_2_OUT<10>1_INV_0 (u_strobe/period[19]_GND_2_o_sub_2_OUT<10>)
+     LUT4:I0->O            1   0.203   0.000  u_strobe/Mcompar_n0001_lut<5> (u_strobe/Mcompar_n0001_lut<5>)
+     MUXCY:S->O            1   0.172   0.000  u_strobe/Mcompar_n0001_cy<5> (u_strobe/Mcompar_n0001_cy<5>)
+     MUXCY:CI->O           1   0.019   0.000  u_strobe/Mcompar_n0001_cy<6> (u_strobe/Mcompar_n0001_cy<6>)
+     MUXCY:CI->O           1   0.019   0.000  u_strobe/Mcompar_n0001_cy<7> (u_strobe/Mcompar_n0001_cy<7>)
+     MUXCY:CI->O           2   0.258   0.617  u_strobe/Mcompar_n0001_cy<8> (u_strobe/Mcompar_n0001_cy<8>)
+     LUT2:I1->O           19   0.205   1.071  u_strobe/Mcount_cnt_val1 (u_strobe/Mcount_cnt_val)
+     FDR:R                     0.430          u_strobe/cnt_0
+    ----------------------------------------
+    Total                      6.299ns (2.734ns logic, 3.565ns route)
+                                       (43.4% logic, 56.6% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'clk'
+  Total number of paths / destination ports: 42 / 9
+-------------------------------------------------------------------------
+Offset:              6.323ns (Levels of Logic = 3)
+  Source:            done (FF)
+  Destination:       led<2> (PAD)
+  Source Clock:      clk rising
+
+  Data Path: done to led<2>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDR:C->Q             46   0.447   1.738  done (done)
+     LUT5:I1->O            1   0.203   0.580  pass_SW0 (N8)
+     LUT6:I5->O            1   0.205   0.579  pass (led_2_OBUF)
+     OBUF:I->O                 2.571          led_2_OBUF (led<2>)
+    ----------------------------------------
+    Total                      6.323ns (3.426ns logic, 2.897ns route)
+                                       (54.2% logic, 45.8% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'phy_tx_clk'
+  Total number of paths / destination ports: 5 / 5
+-------------------------------------------------------------------------
+Offset:              3.634ns (Levels of Logic = 1)
+  Source:            u_eth/mii_tx_en (FF)
+  Destination:       phy_tx_en (PAD)
+  Source Clock:      phy_tx_clk rising
+
+  Data Path: u_eth/mii_tx_en to phy_tx_en
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FD:C->Q               2   0.447   0.616  u_eth/mii_tx_en (u_eth/mii_tx_en)
+     OBUF:I->O                 2.571          phy_tx_en_OBUF (phy_tx_en)
+    ----------------------------------------
+    Total                      3.634ns (3.018ns logic, 0.616ns route)
+                                       (83.0% logic, 17.0% route)
+
+=========================================================================
+
+Cross Clock Domains Report:
+--------------------------
+
+Clock to Setup on destination clock clk
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+clk            |    5.054|         |         |         |
+phy_tx_clk     |    1.161|         |         |         |
+---------------+---------+---------+---------+---------+
+
+Clock to Setup on destination clock phy_tx_clk
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+clk            |    1.811|         |         |         |
+phy_tx_clk     |    4.612|         |         |         |
+---------------+---------+---------+---------+---------+
+
+=========================================================================
+
+
+Total REAL time to Xst completion: 54.00 secs
+Total CPU time to Xst completion: 48.48 secs
+ 
+--> 
+
+
+Total memory usage is 406088 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :  100 (   0 filtered)
+Number of infos    :   23 (   0 filtered)
+

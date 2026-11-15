@@ -1,0 +1,7 @@
+{
+  "mse_noisy": 5421747.336898919,
+  "mse_filtered_fpga": 926239.0474799868,
+  "snr_noisy_db": -0.9189536040262875,
+  "snr_filtered_fpga_db": 6.755208288096761,
+  "differences_vs_reference": 0
+}
